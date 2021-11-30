@@ -8,11 +8,12 @@ void main(void)
     BCSCTL2 |= DIVS_3;      // Divide SMCLK by 8
     WDTCTL = WDT_MDLY_32;   // Preset constant for 32ms
                             // 32 * 8 = 256
-    IE1 |= WDTIE;
-    P1DIR = RedLED|GreenLED;
+    IE1 |= WDTIE;           // Enable watchdog interrupt
+
+    P1DIR = RedLED|GreenLED;// Prepare P1 outputs
     P1OUT = RedLED;
     _enable_interrupts();
-    LPM1;
+    LPM1;                   // Enter low power mode
 }
 #pragma vector = WDT_VECTOR
 __interrupt void WDT(void)
