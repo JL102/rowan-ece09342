@@ -1,11 +1,10 @@
 #include <msp430g2553.h>
 
-volatile long tempRaw;
+volatile long adcValue;
 char result[100];
 volatile long sample[100];
 
-
-void ConfigureAdc_temp();
+void ConfigureAdc_light();
 
 void uart_init(void);
 void ConfigClocks(void);
@@ -17,7 +16,6 @@ void main(void)
 {
     WDTCTL = WDTPW + WDTHOLD; // Stop watchdog timer
 
-
     port_init();
 
     ConfigClocks();
@@ -26,34 +24,31 @@ void main(void)
     _delay_cycles(5);                // Wait for ADC Ref to settle
 
     while(1){
+        ConfigureAdc_light();
+        ADC10CTL0 |= ENC + ADC10SC +MSC;       // Converter Enable, Sampling/conversion start
+        while((ADC10CTL0 & ADC10IFG) == 0);    // check the Flag, while its low just wait
 
-
-                ConfigureAdc_temp();
-                ADC10CTL0 |= ENC + ADC10SC +MSC;       // Converter Enable, Sampling/conversion start
-                while((ADC10CTL0 & ADC10IFG) == 0);    // check the Flag, while its low just wait
-                P1OUT |= BIT6;                         // green LED on
-                _delay_cycles(200000);               // delay for about 1 second so LED doesn't flash too fast
-                tempRaw = ADC10MEM;                    // read the converted data into a variable
-                P1OUT &= ~BIT6;                        // green LED off
-                ADC10CTL0 &= ~ADC10IFG;                // clear the flag
-                itoa(tempRaw,result,10); // convert temperature reading to Fahrenheit
-                int acount =0;
-                while(result[acount]!='\0')
-                {
-                  while((IFG2 & UCA0TXIFG)==0);                  //Wait Unitl the UART transmitter is ready
-                  UCA0TXBUF = result[acount++] ;                   //Transmit the received data.
-                }
-                while((IFG2 & UCA0TXIFG)==0);
-                UCA0TXBUF = '\n';
-                while((IFG2 & UCA0TXIFG)==0);
-                UCA0TXBUF = '\r';
+        P1OUT |= BIT6;                          // green LED on
+        _delay_cycles(200000);                  // Delay
+        adcValue = ADC10MEM;                    // read the converted data into a variable
+        P1OUT &= ~BIT6;                         // green LED off
+        ADC10CTL0 &= ~ADC10IFG;                 // clear the flag
+        itoa(adcValue,result,10);               // String version of adc value
+        int acount =0;
+        while(result[acount]!='\0')
+        {
+          while((IFG2 & UCA0TXIFG)==0);                  //Wait Unitl the UART transmitter is ready
+          UCA0TXBUF = result[acount++] ;                   //Transmit the received data.
+        }
+        while((IFG2 & UCA0TXIFG)==0);
+        UCA0TXBUF = '\n';
+        while((IFG2 & UCA0TXIFG)==0);
+        UCA0TXBUF = '\r';
     }
 }
 
-
-
-// Configure ADC Temperature
-void ConfigureAdc_temp() {
+// Configure ADC
+void ConfigureAdc_light() {
      ADC10CTL1 = INCH_7 + ADC10DIV_0;// + CONSEQ_2;
      ADC10CTL0 = SREF_0 | ADC10SHT_3 | ADC10ON ;//| ADC10IE; //Vref+, Vss, 64 ATD clocks per sample, internal references, turn ADCON
      __delay_cycles(5);                                 //wait for adc Ref to settle
@@ -70,27 +65,24 @@ void uart_init(void){
     UCA0CTL1 &= ~UCSWRST;                    //Enable the UART state naching
     IE2 |= UCA0RXIE;                         //Enable the UART receiver Interrupt
 }
-void ConfigClocks(void)
- {
 
-  BCSCTL1 = CALBC1_1MHZ;                     // Set range
-  DCOCTL = CALDCO_1MHZ;                      // Set DCO step + modulation
-  BCSCTL3 |= LFXT1S_2;                       // LFXT1 = VLO
-  IFG1 &= ~OFIFG;                            // Clear OSCFault flag
-  BCSCTL2 = 0;                               // MCLK = DCO = SMCLK
+void ConfigClocks(void) {
+    BCSCTL1 = CALBC1_1MHZ;                     // Set range
+    DCOCTL = CALDCO_1MHZ;                      // Set DCO step + modulation
+    BCSCTL3 |= LFXT1S_2;                       // LFXT1 = VLO
+    IFG1 &= ~OFIFG;                            // Clear OSCFault flag
+    BCSCTL2 = 0;                               // MCLK = DCO = SMCLK
  }
 
 
-
-void strreverse(char* begin, char* end)      // Function to reverse the order of the ASCII char array elements
-{
+// Function to reverse the order of the ASCII char array elements
+void strreverse(char* begin, char* end) {
     char aux;
     while(end>begin)
         aux=*end, *end--=*begin, *begin++=aux;
 }
 
 void itoa(int value, char* str, int base) {  //Function to convert the signed int to an ASCII char array
-
     static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     char* wstr=str;
     int sign;
@@ -114,11 +106,7 @@ void itoa(int value, char* str, int base) {  //Function to convert the signed in
         *wstr++='-';
     *wstr='\0'; //Attach a null character at end of char array. The string is in revers order at this point
     strreverse(str,wstr-1); // Reverse string
-
 }
-
-
-
 
 void port_init(){
     P1SEL |= BIT1 + BIT2;            // select non-GPIO  usage for Pins 1 and 2
