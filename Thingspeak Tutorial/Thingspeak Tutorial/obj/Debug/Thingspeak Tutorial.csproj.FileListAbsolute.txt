@@ -1,0 +1,11 @@
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\bin\Debug\Thingspeak Tutorial.exe.config
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\bin\Debug\Thingspeak Tutorial.exe
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\bin\Debug\Thingspeak Tutorial.pdb
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.csproj.AssemblyReference.cache
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.csproj.SuggestedBindingRedirects.cache
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak_Tutorial.Form1.resources
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak_Tutorial.Properties.Resources.resources
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.csproj.GenerateResource.cache
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.csproj.CoreCompileInputs.cache
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.exe
+D:\OneDrive\School\2021 - Embedded Systems\VS Projects\Thingspeak Tutorial\Thingspeak Tutorial\obj\Debug\Thingspeak Tutorial.pdb
